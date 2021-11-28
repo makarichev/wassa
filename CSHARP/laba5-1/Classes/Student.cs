@@ -8,21 +8,15 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace laba4.Classes
+namespace laba5.Classes
 {
+    [Serializable]
     public class Student : Person, IEnumerable, INotifyPropertyChanged
     {
         private Education education;
         private int group;
         private List<Exam> exams = new();
         private List<Test> tests = new();
-
-
-
-
-
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,6 +34,166 @@ namespace laba4.Classes
         }
 
 
+
+
+
+        #region laba5       
+        public Student DeepCopy2()
+        {
+            var memorystream = new MemoryStream();
+            var serializer = new BinaryFormatter();
+            serializer.Serialize(memorystream, this);
+            memorystream.Position = 0;
+            var copy = (Student)serializer.Deserialize(memorystream);
+
+            memorystream.Close();
+            return copy;
+        }
+
+        private void copyFrom(Student copy) {
+
+            this.Person = copy.Person;
+            this.Education = copy.Education;
+            this.Group = copy.Group;
+            this.Exams = copy.Exams;
+            this.Tests = copy.Tests;
+
+        }
+
+        public bool Save(string fileName)
+        {
+
+            try
+            {
+                Stream openFileStream = File.Open(fileName, FileMode.Create);
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(openFileStream, this);
+                openFileStream.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+
+
+        }
+        public bool Load(string fileName)
+        {
+            Stream fileStream;
+            try
+            {
+                fileStream = File.Open(fileName, FileMode.OpenOrCreate);
+                var serializer = new BinaryFormatter();
+
+                var copy = (Student)serializer.Deserialize(fileStream);
+                copyFrom(copy);
+
+                fileStream.Close();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+        public bool AddFromConsole()
+        {
+
+
+            try
+            {
+
+                Console.WriteLine("Ввод данных для объекта:");
+                Console.Write("Фамилия,Имя,Дата рождения(dd.mm.yyyy) через\",\":");
+                var s = Console.ReadLine().Split(',');
+                var copy = new Student();
+                copy.fio = s[0];
+                copy.name = s[1];
+                copy.date = DateTime.Parse(s[2]);
+
+                Console.Write("Образование (Specialist = 0, Bachelor = 1, SecondEducation = 2, None = 3):");
+                if (int.TryParse(Console.ReadLine(), out int edu)) copy.education = (Education)edu;
+
+                Console.Write("Номер группы:");
+                copy.group = int.Parse(Console.ReadLine());
+
+                bool examContinue = true;
+                while (examContinue) {
+                    Console.Write("Добавить экзамен? (y/n):");
+                    if (Console.ReadLine().ToUpper() == "Y")
+                    {
+                        var exam = Exam.AddFromConsole();
+                        copy.exams.Add(exam);
+                    }
+                    else examContinue = false;
+
+                }
+                copyFrom(copy);
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                Console.Write($"Ошибка ввода данных {ex.Message}");
+                return false;
+                throw;
+            }
+
+        }
+
+
+        public static bool Load(string fileName, Student copy)
+        {
+            Stream fileStream;
+            try
+            {
+                fileStream = File.Open(fileName, FileMode.OpenOrCreate);
+                var serializer = new BinaryFormatter();
+
+                copy = (Student)serializer.Deserialize(fileStream);
+
+                fileStream.Close();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+        }
+
+
+        public static bool Save(string fileName, Student copy)
+        {
+
+            try
+            {
+                Stream openFileStream = File.Open(fileName, FileMode.Create);
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(openFileStream, copy);
+                openFileStream.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+
+
+        }
+
+        #endregion
+
+
+
+
         public Person Person
         {
             get { return base.DeepCopy() as Person; }
@@ -53,8 +207,8 @@ namespace laba4.Classes
 
         public Education Education
         {
-            get => education; 
-            set 
+            get => education;
+            set
             {
                 education = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Education"));
@@ -79,9 +233,6 @@ namespace laba4.Classes
 
         public List<Exam> Exams { get => exams; set => exams = value; }
         public List<Test> Tests { get => tests; set => tests = value; }
-
-
-
 
 
 

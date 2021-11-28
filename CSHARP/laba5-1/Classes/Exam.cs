@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace laba4.Classes
+namespace laba5.Classes
 {
+    [Serializable]
     public class Exam: IDateAndCopy, IComparable, IComparer<Exam>
     {
         public string Name { get; set; }
@@ -47,6 +48,22 @@ namespace laba4.Classes
         }
 
 
+
+        public static Exam AddFromConsole()
+        {
+
+
+            Console.WriteLine("Ввод данных об экзамене:");
+            Console.Write($"предмет оценка дата(dd.mm.yyyy) через\",\":");
+            var s = Console.ReadLine().Split(',');
+
+            var copy = new Exam();
+            copy.Name = s[0];
+            copy.Score = int.Parse(s[1]);
+            copy.Date = DateTime.Parse(s[2]);
+            return copy;
+
+        }
 
     }
 }
