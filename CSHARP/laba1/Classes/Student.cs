@@ -71,7 +71,7 @@ namespace laba1.Classes
         
         public IEnumerator<string> GetEnumerator()
         {
-            return new StudentEnumerator();
+            return null;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
