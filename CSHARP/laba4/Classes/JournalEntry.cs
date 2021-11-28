@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace laba4.Classes
 {
-    public class JournalEntry<TKey>
+    public class JournalEntry
     {
         public string CollectionName { get; set; }
         public Action Action { get; set; }
         public string PropertyName { get; set; }
-        public TKey Key { get; set; }
+        public String Key { get; set; }
 
         public override string ToString()
         {

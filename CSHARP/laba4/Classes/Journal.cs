@@ -8,10 +8,10 @@ namespace laba4.Classes
 {
     public class Journal<TKey>
     {
-        private List<JournalEntry<TKey>> entries = new();
+        private List<JournalEntry> entries = new();
 
-        public void SudentsChanged(object sender, StudentsChangedEventArgs<TKey> args) {
-            entries.Add(new JournalEntry<TKey> { 
+        public void SudentsChanged(object sender, StudentsChangedEventArgs args) {
+            entries.Add(new JournalEntry { 
                 CollectionName = args.CollectionName, 
                 Action = args.Action, 
                 PropertyName = args.PropertyName,

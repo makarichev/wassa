@@ -10,7 +10,7 @@ namespace laba4.Classes
 
     public delegate TKey KeySelector<TKey>(Student st);
 
-    public delegate void StudentsChangedHandler<TKey>(object source, StudentsChangedEventArgs<TKey> args);
+    public delegate void StudentsChangedHandler(object source, StudentsChangedEventArgs args);
 
 
     public class StudentCollection<TKey>
@@ -24,13 +24,13 @@ namespace laba4.Classes
         }
 
 
-        public event StudentsChangedHandler<TKey> StudentsChanged;
+        public event StudentsChangedHandler StudentsChanged;
 
 
         private void StudentPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            StudentsChanged?.Invoke(this, new StudentsChangedEventArgs<TKey>(
-                CollectionName, Action.Property, e.PropertyName, keySelector(sender as Student)));
+            StudentsChanged?.Invoke(this, new StudentsChangedEventArgs(
+                CollectionName, Action.Property, e.PropertyName, keySelector(sender as Student).ToString()));
         }
 
         public string CollectionName { get; set; }
@@ -38,7 +38,7 @@ namespace laba4.Classes
             
             if (dictionary.ContainsKey(key)) {
                 var st = dictionary[key];
-                StudentsChanged?.Invoke(this, new StudentsChangedEventArgs<TKey>(CollectionName, Action.Remove, null, key));
+                StudentsChanged?.Invoke(this, new StudentsChangedEventArgs(CollectionName, Action.Remove, null, key.ToString()));
                 st.PropertyChanged -= StudentPropertyChanged;
                 dictionary.Remove(key);
                 return true;
@@ -116,7 +116,7 @@ namespace laba4.Classes
             foreach (var s in students) {
                 dictionary.Add(keySelector(s), s);
                 s.PropertyChanged += StudentPropertyChanged;
-                StudentsChanged?.Invoke(this, new StudentsChangedEventArgs<TKey>(CollectionName, Action.Add, null, keySelector(s)));
+                StudentsChanged?.Invoke(this, new StudentsChangedEventArgs(CollectionName, Action.Add, null, keySelector(s).ToString()));
             }
         }
 

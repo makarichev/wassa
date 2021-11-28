@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace laba4.Classes
 {
 
-    public class StudentsChangedEventArgs<TKey> : EventArgs {
+    public class StudentsChangedEventArgs : EventArgs {
 
         public string CollectionName { get; set; }
         public Action Action { get; set; }
         public string PropertyName { get; set; }
-        public TKey Key { get; set; }
+        public String Key { get; set; }
 
-        public StudentsChangedEventArgs(string CollectionName, Action Action, string PropertyName, TKey Key)
+        public StudentsChangedEventArgs(string CollectionName, Action Action, string PropertyName, String Key)
         {
             this.CollectionName = CollectionName;
             this.Action = Action;
