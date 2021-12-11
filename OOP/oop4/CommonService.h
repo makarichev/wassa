@@ -77,34 +77,48 @@ public:
 };
 
 
-class Student : public Common {
+class Leaner : public Common {
+public:
+	Leaner(Fio fio = Fio()) : Common(fio) {}
+};
+
+
+
+class Prepod : public Common {
+public:
+	Prepod(Fio fio = Fio()) : Common(fio) {}
+};
+
+
+
+class Student : public Leaner {
 
 	string department = "";
 	int groupNumber = 0;
 
 
 public:
-	Student(Fio fio = Fio(), string department = "-", int groupNumber = 0) : Common(fio), department(department), groupNumber(groupNumber)
+	Student(Fio fio = Fio(), string department = "-", int groupNumber = 0) : Leaner(fio), department(department), groupNumber(groupNumber)
 	{
 	}
 
 	void Print() {
 		cout << "студент:";
-		Common::Print();
+		Leaner::Print();
 		cout << " Факультет:" << department;
 		cout << " Номер группы:" << groupNumber;
 	}
 
 	void Write(ofstream& fout) {
 		fout << "student" << endl;
-		Common::Write(fout);
+		Leaner::Write(fout);
 		fout << department << endl;
 		fout << groupNumber << endl;
 		
 	}
 
 	void Read(ifstream& fin) {
-		Common::Read(fin);
+		Leaner::Read(fin);
 		fin >> department;
 		fin >> groupNumber;
 	}
@@ -118,7 +132,7 @@ public:
 enum Cafedra {spintex,bms,pkims};
 
 
-class Teacher : public Common {
+class Teacher : public Prepod {
 	
 	Cafedra cafedra;
 	string course;
@@ -127,12 +141,12 @@ class Teacher : public Common {
 public:
 
 
-	Teacher(Fio fio = Fio(), Cafedra cafedra = Cafedra::bms, string course = "-") : Common(fio), cafedra(cafedra), course(course) {}
+	Teacher(Fio fio = Fio(), Cafedra cafedra = Cafedra::bms, string course = "-") : Prepod(fio), cafedra(cafedra), course(course) {}
 
 
 	void Print() {
 		cout << "преподователь: ";
-		Common::Print();
+		Prepod::Print();
 		cout << " Кафедра:" << cafedraNames[cafedra] << " курс:" << course;
 		{
 
@@ -141,13 +155,13 @@ public:
 
 	void Write(ofstream& fout) {
 		fout << "teacher" << endl;
-		Common::Write(fout);
+		Prepod::Write(fout);
 		fout << cafedra << endl;
 		fout << course << endl;
 
 	}
 	void Read(ifstream& fin) {
-		Common::Read(fin);
+		Prepod::Read(fin);
 		int temp;
 		fin >> temp;
 		cafedra = static_cast<Cafedra>(temp);
