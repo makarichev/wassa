@@ -17,7 +17,7 @@ Date::Date(const Date& other): day(other.day), month(other.month), year(other.ye
 
 bool Date::operator>=(const Date& other)
 {
-	
+
 	if (this->year < other.year) return false;
 	if (this->year > other.year) return true;
 	if (this->month < other.month) return false;
