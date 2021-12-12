@@ -22,32 +22,50 @@ int main()
 	int command = 0;
 	while (command != 100)
 	{
-		command = getCommand();
 
-		switch (command) {
-		case 1:
-			commonService.Print();
-			break;
-		case 2: {
-			commonService.AddStudent();
-			break;
+		try
+		{
+
+
+
+			command = getCommand();
+
+			switch (command) {
+			case 1:
+				commonService.Print();
+				break;
+			case 2: {
+				commonService.AddStudent();
+				break;
+			}
+			case 3: {
+				commonService.AddTeacher();
+				break;
+			}
+			case 4: {
+				commonService.Sort();
+				break;
+			}
+
+			case 5: {
+				commonService.Find();
+				break;
+			}
+
+			case 100:
+				cout << "выход\n";
+				break;
+			default:
+				cout << "не понял\n";
+				break;
+			}
+
 		}
-		case 3: {
-			commonService.AddTeacher();
-			break;
-		}
-		case 4: {
-			commonService.Sort();
-			break;
+		catch (...)
+		{
+			cout << "ERROR!";
 		}
 
-		case 100:
-			cout << "выход\n";
-			break;
-		default:
-			cout << "не понял\n";
-			break;
-		}
 	}
 
 
@@ -63,6 +81,7 @@ int getCommand() {
 		<< "2 - добавть нового студента\n"
 		<< "3 - добавть нового преподавателя\n"
 		<< "4 - сортировка по ФИО\n"
+		<< "5 - поиск по имени и фамилии\n"
 		<< "100 - выход\n"
 		<< "введите команду:"
 		;
