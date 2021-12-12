@@ -29,10 +29,10 @@ int main()
 			commonService.Print();
 			break;
 		case 2: {
-			cout << "ФИО через пробел:"; Fio fio; cin >> fio;
+			cout << "Фамилия Имя через пробел:"; Man man; cin >> man;
 			cout << "Факультет:"; string department; cin >> department;
 			cout << "Номер группы:"; int groupNumber; cin >> groupNumber;
-			commonService.Add(new Student(fio, department, groupNumber));
+			commonService.Add(new Student(man, department, groupNumber));
 			break;
 		}
 		case 3: {
@@ -44,6 +44,11 @@ int main()
 		}
 		case 4: {
 			commonService.Sort();
+			break;
+		}
+
+		case 5: {
+			commonService.Find();
 			break;
 		}
 
@@ -69,6 +74,7 @@ int getCommand() {
 		<< "2 - добавть нового студента\n"
 		<< "3 - добавть нового преподавателя\n"
 		<< "4 - сортировка по ФИО\n"
+		<< "5 - поиск по имени и фамилии\n"
 		<< "100 - выход\n"
 		<< "введите команду:"
 		;

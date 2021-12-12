@@ -7,6 +7,39 @@
 
 using namespace std;
 
+
+class Man
+{
+
+	string lastName;
+	string firstName;
+
+	friend ostream& operator<<(ostream& out, Man& d) {
+		out << d.lastName << " " << d.firstName;
+		return out;
+
+	}
+	friend istream& operator>>(istream& in, Man& d) {
+		in >> d.lastName >> d.firstName;
+		return in;
+	}
+
+
+public:
+
+	Man(string lastName = "?", string firstName = "?") : firstName(firstName), lastName(lastName) {}
+	Man(const Man& other) : firstName(other.firstName), lastName(other.lastName) {}
+
+	bool operator==(const Man& b) {
+		return this->firstName == b.firstName && this->lastName == b.lastName;
+	};
+
+	string get_firstName() { return firstName; }
+	string get_lastName() { return lastName; }
+
+};
+
+
 class Fio
 {
 
@@ -15,36 +48,33 @@ class Fio
 	string lastName;
 
 	friend ostream& operator<<(ostream& out, Fio& d) {
-		out << d.firstName << " " << d.secondName << " " << d.lastName;
+		out << d.lastName << " " << d.firstName << " " << d.secondName;
 		return out;
 	}
 
 	friend istream& operator>>(istream& in, Fio& d) {
-		in >> d.firstName >> d.secondName >> d.lastName;
+		in >> d.lastName >> d.firstName >> d.secondName;
 		return in;
 	}
 
-	
+
 
 
 public:
 
 
-	Fio(string firstName = "?", string secondName = "?", string lastName = "?") : firstName(firstName), secondName(secondName), lastName(lastName)
+	Fio(string lastName = "?", string firstName = "?", string secondName = "?") : firstName(firstName), secondName(secondName), lastName(lastName)
 	{
 	}
 
-	bool operator<(const Fio& other)
-	{
-		if (this->lastName < other.lastName) return true;
-		if (this->lastName > other.lastName) return false;
+	string get_firstName() { return firstName; }
+	string get_secondName() { return secondName; }
+	string get_lastName() { return lastName; }
 
-		if (this->firstName < other.firstName) return true;
-		if (this->firstName > other.firstName) return false;
+	bool operator==(const Fio& b) {
+		return this->firstName == b.firstName && this->lastName == b.lastName && this->secondName == b.secondName;
+	};
 
-		if (this->secondName < other.secondName) return true;
-		if (this->secondName > other.secondName) return false;
-	}
 };
 
 
@@ -52,18 +82,67 @@ public:
 class Common
 {
 
+protected:
+
 public:
+
+
+	virtual void Print() {}
+
+	virtual void Write(ofstream& fout) {}
+
+	virtual void Read(ifstream& fin) {}
+
+	virtual string sortingName() { return ""; }
+
+	virtual bool findMe(string lastName, string firstName) { return false; }
+
+
+
+
+};
+
+
+class Leaner : public Common {
+
+	Man man;
+
+
+public:
+	Leaner(Man man = Man()) : Common(), man(man) {}
+
+	virtual void Print() {
+		cout << man;
+	}
+
+	virtual void Write(ofstream& fout) {
+		fout << man << endl;
+	}
+
+	virtual void Read(ifstream& fin) {
+		fin >> man;
+	}
+
+	virtual string sortingName() { return man.get_lastName(); }
+	virtual bool findMe(string lastName, string firstName) { 
+		return man.get_lastName() == lastName && man.get_firstName() == firstName;
+	}
+
+};
+
+
+
+class Prepod : public Common {
 
 	Fio fio;
 
-	Common(Fio fio = Fio())
-	{
-		this->fio = fio;
-	}
+public:
+	Prepod(Fio fio = Fio()) : Common(), fio(fio) {}
 
 	virtual void Print() {
 		cout << fio;
 	}
+
 
 	virtual void Write(ofstream& fout) {
 		fout << fio << endl;
@@ -73,20 +152,13 @@ public:
 		fin >> fio;
 	}
 
+	virtual string sortingName() { return fio.get_lastName(); }
 
-};
-
-
-class Leaner : public Common {
-public:
-	Leaner(Fio fio = Fio()) : Common(fio) {}
-};
+	virtual bool findMe(string lastName, string firstName) {
+		return fio.get_lastName() == lastName && fio.get_firstName() == firstName;
+	}
 
 
-
-class Prepod : public Common {
-public:
-	Prepod(Fio fio = Fio()) : Common(fio) {}
 };
 
 
@@ -98,7 +170,7 @@ class Student : public Leaner {
 
 
 public:
-	Student(Fio fio = Fio(), string department = "-", int groupNumber = 0) : Leaner(fio), department(department), groupNumber(groupNumber)
+	Student(Man man = Man(), string department = "-", int groupNumber = 0) : Leaner(man), department(department), groupNumber(groupNumber)
 	{
 	}
 
@@ -114,7 +186,7 @@ public:
 		Leaner::Write(fout);
 		fout << department << endl;
 		fout << groupNumber << endl;
-		
+
 	}
 
 	void Read(ifstream& fin) {
@@ -123,20 +195,20 @@ public:
 		fin >> groupNumber;
 	}
 
-	
+
 };
 
 
 
 
-enum Cafedra {spintex,bms,pkims};
+enum Cafedra { spintex, bms, pkims };
 
 
 class Teacher : public Prepod {
-	
+
 	Cafedra cafedra;
 	string course;
-	string cafedraNames[3] {"spintex","bms","pkims"};
+	string cafedraNames[3]{ "spintex","bms","pkims" };
 
 public:
 
@@ -179,7 +251,7 @@ class CommonService {
 public:
 
 	CommonService() {
-		if (!Read(PATH)) 
+		if (!Read(PATH))
 			LoadTestData();
 	}
 
@@ -195,7 +267,7 @@ public:
 
 		}
 	}
-	
+
 	void Write(string FileName) {
 		ofstream fout;
 		fout.open(FileName);
@@ -230,7 +302,7 @@ public:
 					Student* record = new Student();
 					record->Read(fin);
 					Add(record);
-				
+
 				}
 				else if (className == "teacher") {
 					Teacher* record = new Teacher();
@@ -258,29 +330,56 @@ public:
 	void Add(Common* student) {
 		records.push_back(student);
 	}
-	
+
 
 
 	void Sort()
 	{
 		vector<Common*> result;
 		copy(records.begin(), records.end(), back_inserter(result));
-		sort(result.begin(), result.end(), [](Common* a, Common* b) {return a->fio < b->fio; });
+		sort(result.begin(), result.end(), [](Common* a, Common* b) {
+			return a->sortingName() < b->sortingName();
+		});
 		for (Common* student : result) {
 			student->Print();
 			cout << endl;
 		}
+
+
 	}
-	
+
+
+	void Find()
+	{
+		cout << "Фамилия:"; string lastName; cin >> lastName;
+		cout << "Имя:"; string firstName; cin >> firstName;
+
+		vector<Common*> result;
+		copy_if(records.begin(), records.end(), back_inserter(result), [&](Common* a) { 
+			return a->findMe(lastName, firstName);
+		});
+
+		if (result.size() == 0)
+			cout << "Ничего не найдено" << endl;
+		else
+			for (Common* record : result) {
+				record->Print();
+				cout << endl;
+			}
+
+
+	}
+
 
 	void LoadTestData() {
 
-		Add(new Student(Fio("Николай", "Николаевич", "Николаев"), "факультет1", 115));
-		Add(new Teacher(Fio("Пётр", "Петрович", "Петров"), Cafedra::bms, "Математика"));
-		Add(new Student(Fio("Сидор", "Сидорович", "Сидоров"), "факультет1", 116));
-		Add(new Student(Fio("Степвнов", "Стеиан", "Степанович"), "факультет1", 115));
+		Add(new Student(Man("Николаев", "Николай"), "факультет1", 115));
+		Add(new Student(Man("Сидоров", "Сидор"), "факультет1", 116));
+		Add(new Teacher(Fio("Петров", "Пётр", "Петрович"), Cafedra::bms, "Математика"));
+		Add(new Student(Man("Степвнов", "Степан"), "факультет1", 115));
 		Add(new Teacher(Fio("Макарычев", "Василий", "Дмитриевич"), Cafedra::pkims, "Физика"));
-		Add(new Student(Fio("Ольгина", "Ольга", "Олеговна"), "факультет1", 116));
+		Add(new Student(Man("Ольгина", "Ольга"), "факультет2", 116));
+		Add(new Student(Man("Макарычев", "Василий"), "факультет2", 116));
 	}
 
 };

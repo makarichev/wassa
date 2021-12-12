@@ -1,23 +1,73 @@
 #include <iostream>
+#include "CommonService.h"
 #include <Windows.h>
 using namespace std;
 
 
+int getCommand();
+
+
+
 int main()
 {
-    SetConsoleOutputCP(1251);
-    cout << "Привет!\n";
+	CommonService commonService;
 
-	try
-	{
 
-	}
-	catch (const exception&)
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+
+
+
+	int command = 0;
+	while (command != 100)
 	{
-			
+		command = getCommand();
+
+		switch (command) {
+		case 1:
+			commonService.Print();
+			break;
+		case 2: {
+			commonService.AddStudent();
+			break;
+		}
+		case 3: {
+			commonService.AddTeacher();
+			break;
+		}
+		case 4: {
+			commonService.Sort();
+			break;
+		}
+
+		case 100:
+			cout << "выход\n";
+			break;
+		default:
+			cout << "не понял\n";
+			break;
+		}
 	}
 
 
 
 }
 
+
+
+int getCommand() {
+	cout
+		<< "\n"
+		<< "1 - список студентов\n"
+		<< "2 - добавть нового студента\n"
+		<< "3 - добавть нового преподавателя\n"
+		<< "4 - сортировка по ФИО\n"
+		<< "100 - выход\n"
+		<< "введите команду:"
+		;
+	int command;
+	cin >> command;
+	cout << "\n";
+	return command;
+}
