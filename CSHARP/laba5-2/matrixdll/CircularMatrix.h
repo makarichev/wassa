@@ -1,10 +1,5 @@
-#pragma once
 #include <iostream>
 using namespace std;
-
-
-
-#pragma once
 
 
 class CircularMatrix {
