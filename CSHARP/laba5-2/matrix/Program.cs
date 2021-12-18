@@ -19,7 +19,6 @@ namespace matrix
             for (int i = 1; i < n; i++) b[i] = 1;
 
             var result1 = new double[n];
-
             CppLibrary.Calc(n, a, b, result1);
 
 
